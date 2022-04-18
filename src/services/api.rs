@@ -7,7 +7,6 @@ where
     T: DeserializeOwned + 'static + std::fmt::Debug,
     B: Serialize + std::fmt::Debug,
 {
-    log::info!("method: {:?}", &method);
     let allow_body = method == reqwest::Method::POST || method == reqwest::Method::PUT;
     let mut builder = reqwest::Client::new().request(method, url);
 

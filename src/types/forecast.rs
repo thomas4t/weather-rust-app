@@ -1,4 +1,31 @@
+use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
+
+//rfc3339
+mod my_date_format {
+    use chrono::{DateTime, TimeZone, Utc};
+    use serde::{self, Deserialize, Deserializer, Serializer};
+
+    //"2022-04-18 21:00:00"
+    const FORMAT: &'static str = "%Y-%m-%d %H:%M:%S";
+
+    pub fn serialize<S>(date: &DateTime<Utc>, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let s = format!("{}", date.format(FORMAT));
+        serializer.serialize_str(&s)
+    }
+
+    pub fn deserialize<'de, D>(deserializer: D) -> Result<DateTime<Utc>, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let s = String::deserialize(deserializer)?;
+        Utc.datetime_from_str(&s, FORMAT)
+            .map_err(serde::de::Error::custom)
+    }
+}
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -10,7 +37,7 @@ pub struct RootWeather {
     pub city: City,
 }
 
-#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct List {
     pub dt: i64,
@@ -21,8 +48,9 @@ pub struct List {
     pub visibility: i64,
     pub pop: f64,
     pub sys: Sys,
+    #[serde(with = "my_date_format")]
     #[serde(rename = "dt_txt")]
-    pub dt_txt: String,
+    pub dt_txt: DateTime<Utc>,
     pub rain: Option<Rain>,
 }
 

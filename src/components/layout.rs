@@ -17,6 +17,8 @@ pub fn layout(props: &LayoutProps) -> Html {
             flex-direction: column;
             .content {
                 flex: 1;
+                max-width: 70vw;
+                margin: auto;
             }
         "#)}>
             <Header />
@@ -31,7 +33,6 @@ fn header() -> Html {
     html! {
         <header class={css!(r#"
             background-color: rgb(88, 164, 255);
-            border-radius: 5px;
             border: none;
             display: flex;
             flex-direction:column;
@@ -45,7 +46,7 @@ fn header() -> Html {
               
             nav li {
             display: block;
-            float: right;
+            float: left;
             padding: 10px;
             }
               
@@ -53,9 +54,9 @@ fn header() -> Html {
             <h1>{"Weather app"}</h1>
             <nav>
                 <ul>
-                    <li><Link<AppRoute> to={AppRoute::Home} classes="app-link" >{ "Home" }</Link<AppRoute>></li>
-                    <li><Link<AppRoute> to={AppRoute::About} classes="app-link">{ "About" }</Link<AppRoute>></li>
-                    <li><Link<AppRoute> to={AppRoute::PageNotFound} classes="app-link">{ "Not found page" }</Link<AppRoute>></li>
+                    <li><Link<AppRoute> to={AppRoute::Home}>{ "Home" }</Link<AppRoute>></li>
+                    <li><Link<AppRoute> to={AppRoute::Forecast}>{ "Forecast" }</Link<AppRoute>></li>
+                    <li><Link<AppRoute> to={AppRoute::About}>{ "About" }</Link<AppRoute>></li>
                 </ul>
             </nav>
       </header>
@@ -67,14 +68,18 @@ fn header() -> Html {
 fn footer() -> Html {
     html! {
         <footer class={css!(r#"
-            color: white;
-            height: 50px;
-            font-size: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
             background-color: rgb(88, 164, 255);
-            border-radius: 5px;
             border: none;
+            span {
+                margin: 5px;
+            }
         "#)}>
-        { "Footer" }
+                <span>{"Built with Rust&Yew"}</span>
+                <span>{"© 2022 Tomáš Trávníček - All Rights Reserved."}</span>
         </footer>
     }
 }
