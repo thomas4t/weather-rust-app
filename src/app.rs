@@ -1,16 +1,19 @@
 use yew::prelude::*;
 use yew_router::prelude::*;
 
-use crate::components::nav::Nav;
-use crate::routes::{switch, AppRoute};
+use crate::{
+    components::layout::Layout,
+    routes::{switch, AppRoute},
+};
 
-/// Root app component
+/// Root
 #[function_component(App)]
 pub fn app() -> Html {
     html! {
         <BrowserRouter>
-            <Nav />
-            <Switch<AppRoute> render={Switch::render(switch)} />
+            <Layout>
+                <Switch<AppRoute> render={Switch::render(switch)} />
+            </Layout>
         </BrowserRouter>
     }
 }

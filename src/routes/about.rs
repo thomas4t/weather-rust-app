@@ -1,12 +1,12 @@
-use serde::{de::DeserializeOwned, Deserialize, Serialize};
 use yew::prelude::*;
 use yew_hooks::use_async;
+
+use crate::services::forecast::query_by_city;
 
 /// About page
 #[function_component(About)]
 pub fn about() -> Html {
-    let state =
-        use_async(async move { fetch_repo(("jetli/create-yew-app".to_string()).clone()).await });
+    let state = use_async(async move { query_by_city(("Praha".to_string()).clone()).await });
 
     let onclick = {
         let state = state.clone();
@@ -15,9 +15,10 @@ pub fn about() -> Html {
         })
     };
 
+    log::info!("Data: {:?}", state.data);
+
     html! {
         <div class="app">
-            <header class="app-header">
                 <p>
                     <a
                         class="app-link"
@@ -27,7 +28,7 @@ pub fn about() -> Html {
                     >
                         { "Create Yew App" }
                     </a>
-                    { ", Set up a modern yew web app by running one command." }
+                    { ", Set up a modern yewww web app by running one command." }
                 </p>
                 <p>
                     <button {onclick}>{ "Load info of this repo" }</button>
@@ -42,93 +43,57 @@ pub fn about() -> Html {
                     }
                 </p>
                 {
-                    if let Some(repo) = &state.data {
+                    if let Some(forecast) = &state.data {
                         html! {
                             <>
-                                <p>{ "Repo name: " }<b>{ &repo.name }</b></p>
-                                <p>{ "Repo full name: " }<b>{ &repo.full_name }</b></p>
-                                <p>{ "Repo description: " }<b>{ &repo.description }</b></p>
+                                {"loaded"}
+                                <p>{&forecast.city.name}</p>
+                                // <p>{ "Repo name x: " }<b>{ &repo.city }</b></p>
+                                // <p>{ "Repo full name: " }<b>{ &repo.full_name }</b></p>
+                                // <p>{ "Repo description: " }<b>{ &repo.description }</b></p>
                             </>
                             }
                     } else {
                         html! {}
                     }
                 }
-                <p>
-                    {
-                        if let Some(error) = &state.error {
-                            match error {
-                                Error::DeserializeError => html! { "DeserializeError" },
-                                Error::RequestError => html! { "RequestError" },
-                            }
-                        } else {
-                            html! {}
-                        }
-                    }
-                </p>
+                // <p>
+                //     {
+                //         if let Some(error) = &state.error {
+                //             match error {
+                //                 Error::DeserializeError => html! { "DeserializeError" },
+                //                 Error::RequestError => html! { "RequestError" },
+                //             }
+                //         } else {
+                //             html! {}
+                //         }
+                //     }
+                // </p>
                 <p>
                     { "Edit " } <code>{ "src/components/about.rs" }</code> { " and save to reload." }
                 </p>
-            </header>
         </div>
     }
 }
 
-async fn fetch_repo(repo: String) -> Result<Repo, Error> {
-    fetch::<Repo>(format!("https://api.github.com/repos/{}", repo)).await
-}
+// #[cfg(test)]
+// mod tests {
+//     use wasm_bindgen_test::*;
 
-/// You can use reqwest or other crates to fetch your api.
-async fn fetch<T>(url: String) -> Result<T, Error>
-where
-    T: DeserializeOwned,
-{
-    let response = reqwest::get(url).await;
-    if let Ok(data) = response {
-        if let Ok(repo) = data.json::<T>().await {
-            Ok(repo)
-        } else {
-            Err(Error::DeserializeError)
-        }
-    } else {
-        Err(Error::RequestError)
-    }
-}
+//     wasm_bindgen_test_configure!(run_in_browser);
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
-struct Repo {
-    id: i32,
-    name: String,
-    full_name: String,
-    description: String,
-}
+//     use super::About;
+//     use yew::start_app;
 
-// You can use thiserror to define your errors.
-#[derive(Clone, Debug, PartialEq)]
-enum Error {
-    RequestError,
-    DeserializeError,
-    // etc.
-}
+//     #[wasm_bindgen_test]
+//     fn about_page_has_an_app_link() {
+//         start_app::<About>();
 
-#[cfg(test)]
-mod tests {
-    use wasm_bindgen_test::*;
+//         let app_links = gloo_utils::document().get_elements_by_class_name("app-link");
 
-    wasm_bindgen_test_configure!(run_in_browser);
+//         assert_eq!(app_links.length(), 1);
 
-    use super::About;
-    use yew::start_app;
-
-    #[wasm_bindgen_test]
-    fn about_page_has_an_app_link() {
-        start_app::<About>();
-
-        let app_links = gloo_utils::document().get_elements_by_class_name("app-link");
-
-        assert_eq!(app_links.length(), 1);
-
-        let link = app_links.item(0).expect("No app-link").inner_html();
-        assert_eq!(link, "Create Yew App");
-    }
-}
+//         let link = app_links.item(0).expect("No app-link").inner_html();
+//         assert_eq!(link, "Create Yew App");
+//     }
+// }
