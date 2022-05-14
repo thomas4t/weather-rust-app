@@ -30,6 +30,9 @@ pub fn weather_card(props: &WeatherCardProps) -> Html {
                 display:flex;
                 overflow-y:auto;
                 margin-top: 5rem;
+                border: 1px solid white;
+                padding: 10px;
+                border-radius: 10px;
             "#)}>
                 {for list.iter().map(|item| {
                     let time = item.dt_txt.format("%H:%M").to_string();
@@ -41,6 +44,9 @@ pub fn weather_card(props: &WeatherCardProps) -> Html {
                             min-height: 250px;
                             margin-right: 3rem;
                             margin-bottom: 3rem;
+                            border: 1px solid white;
+                            padding: 10px;
+                            border-radius: 10px;
                         "#)}>
                             <div>
                                 <span>{time}{" "}{date}</span>

@@ -12,11 +12,10 @@ pub struct ButtonProps {
 
 #[styled_component(Button)]
 pub fn button(props: &ButtonProps) -> Html {
-    let onclick = props.on_click.clone();
     html! {
         <button
             type="button"
-            {onclick}
+            onclick={props.on_click.clone()}
             disabled={props.disabled}
             class={css!(r#"
                 box-sizing: border-box;

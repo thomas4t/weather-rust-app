@@ -1,10 +1,11 @@
 {
-  "author": "Jet Li <jing.i.qin@icloud.com>",
+  "author": "Tomáš Trávníček",
   "name": "yew-app",
   "version": "0.1.0",
   "scripts": {
     "build": "cross-env WASM_PACK_PROFILE=release parcel build static/index.html --public-url ./",
     "start": "cross-env WASM_PACK_PROFILE=dev parcel static/index.html -p 8000 --open",
+    "start:prod": "cross-env WASM_PACK_PROFILE=release parcel static/index.html -p 8000 --open",
     "test": "wasm-pack test --headless --chrome"
   },
   "devDependencies": {

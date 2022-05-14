@@ -23,7 +23,7 @@ pub enum AppRoute {
     PageNotFound,
 }
 
-/// Switch app routes
+// Switch app routes
 pub fn switch(routes: &AppRoute) -> Html {
     match routes.clone() {
         AppRoute::Home => html! { <Home /> },
